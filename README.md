@@ -208,7 +208,7 @@ The project can be extended with:
 
 ## Author
 
-**Your Name**
+**Harshit**
 
 2026 CSE Graduate | KIIT
 
