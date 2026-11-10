@@ -1004,11 +1004,14 @@ It helps determine whether two vector representations point in similar direction
 
 It is commonly used in semantic search because embeddings represent textual meaning in numerical form.
 
-#### 11.2 Mathematical Formula
+### 11.2 Mathematical Formula
 
 The cosine similarity formula is:
 
-$$\operatorname{CosineSimilarity}(A,B) = \frac{A \cdot B}{\|A\|\|B\|} = \frac{\sum_{i=1}^{n} a_i b_i}{\sqrt{\sum_{i=1}^{n} a_i^2} \sqrt{\sum_{i=1}^{n} b_i^2}}$$
+$$\begin{aligned}
+\mathrm{CosineSimilarity}(A,B) &= \frac{A \cdot B}{\|A\|\|B\|} \\
+&= \frac{\sum_{i=1}^{n} a_i b_i}{\sqrt{\sum_{i=1}^{n} a_i^2} \sqrt{\sum_{i=1}^{n} b_i^2}}
+\end{aligned}$$
 
 Where:
 
@@ -1018,13 +1021,13 @@ Where:
 - $\|B\| = \sqrt{\sum_{i=1}^{n} b_i^2}$ represents the magnitude (Euclidean norm) of vector $B$.
 - $n$ represents the dimensionality of the vector space.
 
-## 11.3 Cosine Distance
+### 11.3 Cosine Distance
 
 The project configures ChromaDB to use cosine distance.
 
-The relationship is
+The relationship is:
 
-CosineDistance(A,B) = 1 - CosineSimilarity(A,B) 
+$$\mathrm{CosineDistance}(A,B) = 1 - \mathrm{CosineSimilarity}(A,B)$$
 
 For this configuration, a smaller cosine distance indicates a more similar vector match.
 
