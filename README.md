@@ -1,24 +1,24 @@
 # RAG-Based Intelligent Document Question Answering System
 
-A Python-based Retrieval-Augmented Generation (RAG) application that enables users to upload PDF documents, search their content semantically, and obtain context-aware answers using Large Language Models (LLMs).
+A Python-based Retrieval-Augmented Generation (RAG) project that processes PDF documents, retrieves relevant passages through semantic search, and generates context-aware answers using a locally running Large Language Model (LLM).
 
 ## Overview
 
-Traditional document searching often requires users to manually browse through lengthy PDF files to find specific information.
+Searching long documents manually can take time. This project demonstrates how Retrieval-Augmented Generation can make document question answering easier.
 
-This project aims to simplify that process by combining document processing, semantic search, vector databases, and Large Language Models.
+The application extracts text from a PDF, cleans and divides the text into overlapping chunks, converts the chunks into embeddings, and stores them in ChromaDB. When a user asks a question, the system retrieves relevant chunks and sends them as context to the Llama 3.2 model through Ollama.
 
-The system extracts text from PDF documents, divides it into smaller chunks, converts those chunks into numerical embeddings, and stores them in a vector database. When a user asks a question, the system retrieves relevant information that can be passed to an LLM to generate a contextual response.
+**Current version:** A Python command-line application for PDF-based question answering. A graphical web or mobile application is planned for a future stage.
 
 ## Key Features
 
-- **PDF Text Extraction:** Extracts text from PDF documents using PyPDF.
-- **Text Preprocessing:** Cleans extracted text by removing unnecessary whitespace.
-- **Intelligent Chunking:** Divides large documents into smaller, overlapping text chunks.
-- **Embedding Generation:** Converts text chunks into numerical vectors using Sentence Transformers.
-- **Vector Database:** Stores document embeddings using ChromaDB.
-- **Semantic Search:** Retrieves relevant document passages based on user queries.
-- **LLM Integration:** Planned integration with a locally running LLM through Ollama for context-aware answer generation.
+- PDF text extraction using PyPDF.
+- Text cleaning and preprocessing.
+- Overlapping text chunk generation.
+- Semantic embeddings using Sentence Transformers.
+- Vector storage and similarity search using ChromaDB.
+- Retrieval of the top relevant chunks for a question.
+- Local answer generation using Ollama and Llama 3.2.
 
 ## System Architecture
 
@@ -34,82 +34,59 @@ flowchart TD
     H --> I[Similarity Search]
     F --> I
     I --> J[Relevant Context]
-    J --> K[LLM - Planned Integration]
+    J --> K[Ollama - Llama 3.2]
     K --> L[Generated Answer]
 ```
 
 ## Technology Stack
 
-| Component               | Technology                   |
-| ----------------------- | ---------------------------- |
-| Programming Language    | Python                       |
-| PDF Processing          | PyPDF                        |
-| Embedding Model         | Sentence Transformers        |
-| Embedding Model Name    | all-MiniLM-L6-v2             |
-| Vector Database         | ChromaDB                     |
-| LLM Runtime             | Ollama (planned integration) |
-| Development Environment | Visual Studio Code           |
+| Component | Technology |
+|---|---|
+| Programming language | Python |
+| PDF processing | PyPDF |
+| Embedding framework | Sentence Transformers |
+| Embedding model | all-MiniLM-L6-v2 |
+| Embedding dimensions | 384 |
+| Vector database | ChromaDB |
+| LLM runtime | Ollama |
+| Language model | Llama 3.2 |
+| HTTP communication | Requests |
 
-## Project Workflow
+## How the RAG Pipeline Works
 
-### 1. PDF Text Extraction
+1. **PDF extraction:** PyPDF reads the PDF and extracts available text.
+2. **Preprocessing:** Python regular expressions clean unnecessary whitespace.
+3. **Chunking:** The text is divided into smaller overlapping sections.
+4. **Embedding generation:** all-MiniLM-L6-v2 converts each chunk into a 384-dimensional vector.
+5. **Vector storage:** ChromaDB stores the chunks and their embeddings.
+6. **Retrieval:** The user's question is embedded and compared with stored vectors. The system retrieves the top matching chunks.
+7. **Generation:** The retrieved context and question are sent to Llama 3.2 through Ollama to generate an answer.
 
-The application uses PyPDF to read PDF documents and extract their text content.
+### Chunking Configuration
 
-### 2. Text Preprocessing
+| Parameter | Value |
+|---|---:|
+| Chunk size | 600 characters |
+| Chunk overlap | 100 characters |
+| Step size | 500 characters |
 
-Extracted text is cleaned using Python regular expressions to remove unnecessary whitespace and improve consistency.
-
-### 3. Text Chunking
-
-Large documents are divided into smaller overlapping chunks.
-
-Current configuration:
-
-- Chunk Size: 600 characters
-- Chunk Overlap: 100 characters
-
-Overlapping helps preserve contextual information between consecutive chunks.
-
-### 4. Embedding Generation
-
-The Sentence Transformers model `all-MiniLM-L6-v2` converts each text chunk into a 384-dimensional vector representation.
-
-These embeddings capture semantic information and enable similarity-based retrieval.
-
-### 5. Vector Storage
-
-ChromaDB stores the generated embeddings along with their corresponding text and metadata.
-
-The database uses cosine distance for similarity comparison.
-
-### 6. Semantic Retrieval
-
-When a user enters a question, the system converts it into an embedding and searches the vector database for the most relevant document chunks.
-
-### 7. Answer Generation
-
-The next development stage is integrating a local LLM through Ollama to generate answers using the retrieved document context.
+These settings are character-based, not token-based.
 
 ## Project Structure
 
 ```text
-RAG-Document-QA/
-│
-├── documents/
-│   └── sample.pdf
-│
-├── chroma_db/
-│
+RAG-Based-Intelligent-Document-Question-Answering-System/
 ├── main.py
-│
-├── README.md
 ├── requirements.txt
+├── README.md
+├── Research.md
+├── Notes.txt
+├── LICENSE
 ├── .gitignore
-└── LICENSE
+└── chroma_db/  (created locally when the application runs)
 ```
 
-Note: `chroma_db/` is generated locally and should not be committed to GitHub.
+The ChromaDB directory and Python virtual environment are generated locally and should generally be excluded from Git using `.gitignore`.
 
 ## Installation and Setup
 
@@ -117,102 +94,143 @@ Note: `chroma_db/` is generated locally and should not be committed to GitHub.
 
 - Python 3.10 or later
 - Git
-- Visual Studio Code
+- Ollama
+- The Llama 3.2 model
 
-### Step 1: Clone the Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/RAG-Document-QA.git
-```
+### 1. Clone the repository
 
 ```bash
-cd RAG-Document-QA
+git clone https://github.com/3161-harshit/RAG-Based-Intelligent-Document-Question-Answering-System.git
+cd RAG-Based-Intelligent-Document-Question-Answering-System
 ```
 
-### Step 2: Create a Virtual Environment
+### 2. Create and activate a virtual environment
 
-```bash
-python -m venv .venv
-```
-
-Activate it on Windows:
+On Windows PowerShell:
 
 ```powershell
-.venv\Scripts\Activate.ps1
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 ```
 
-### Step 3: Install Dependencies
+### 3. Install Python dependencies
 
 ```bash
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Step 4: Run the Application
+### 4. Install and prepare Ollama
+
+Install Ollama separately, then download the model:
 
 ```bash
-python main.py
+ollama pull llama3.2
 ```
 
-## Current Implementation Results
+Make sure the Ollama service is running before asking the application to generate an answer. The Python code communicates with Ollama through its local HTTP API.
 
-The initial document ingestion and embedding pipeline has been successfully executed.
+### 5. Run the application
 
-| Metric               | Result           |
-| -------------------- | ---------------- |
-| PDF Processing       | Successful       |
-| Text Chunking        | 18 chunks        |
-| Chunk Size           | 600 characters   |
-| Chunk Overlap        | 100 characters   |
-| Embedding Model      | all-MiniLM-L6-v2 |
-| Embedding Dimensions | 384              |
-| Vector Database      | ChromaDB         |
-| Stored Records       | 18               |
+Pass the path to your PDF with the `--pdf` option:
+
+```powershell
+python main.py --pdf "C:\path\to\your\document.pdf"
+```
+
+The program then prompts you to enter a question.
+
+You can also provide the question directly:
+
+```powershell
+python main.py "What is the main topic of this document?" --pdf "C:\path\to\your\document.pdf"
+```
+
+Optional arguments include:
+
+- `--model`: choose an Ollama model name (defaults to `llama3.2`).
+- `--top-k`: set how many relevant chunks to retrieve (defaults to `3`).
+
+Replace the example PDF path with the actual path to a PDF on your computer.
+
+## Example Questions
+
+- What is the main topic of this document?
+- Summarize the important points.
+- Explain the methodology discussed in the document.
+- What are the key findings?
+- What conclusion does the document present?
+
+The answer depends on the text extracted from the selected PDF and the passages retrieved for the question.
+
+## Initial Implementation Results
+
+The initial ingestion run reported the following results:
+
+| Metric | Result |
+|---|---:|
+| PDF processing | Successful |
+| Text chunks generated | 18 |
+| Chunk size | 600 characters |
+| Chunk overlap | 100 characters |
+| Embedding model | all-MiniLM-L6-v2 |
+| Embedding dimensions | 384 |
+| Vector database | ChromaDB |
+| Records stored | 18 |
+
+The number of chunks and stored records will vary depending on the PDF document.
 
 ## Development Roadmap
 
-- [ ] PDF text extraction
-- [ ] Text preprocessing
-- [ ] Document chunking
-- [ ] Embedding generation
-- [ ] ChromaDB integration
-- [ ] Complete semantic retrieval testing
-- [ ] Ollama local LLM integration
-- [ ] Context-aware answer generation
-- [ ] FastAPI backend integration
-- [ ] React Native frontend
-- [ ] Android application testing
+**Roadmap legend:** [x] means implemented in the current code. [ ] means planned or not yet implemented.
+
+### Completed
+
+- [x] PDF text extraction
+- [x] Text preprocessing
+- [x] Document chunking
+- [x] Embedding generation
+- [x] ChromaDB integration
+- [x] Semantic retrieval implementation
+- [x] Ollama local LLM integration
+- [x] Context-aware answer generation
+
+### Planned
+
+- [ ] Retrieval quality evaluation and improvement (for example, reranking and tuning)
+- [ ] Automated tests and broader testing with different PDF documents
+- [ ] FastAPI backend
+- [ ] User-friendly web or mobile frontend
+- [ ] Multiple document upload and management
+- [ ] Source references for generated answers
+- [ ] Android application development and testing
+
+The checked items describe functionality present in the current Python implementation. The unchecked items are future development work; they should only be checked after they have actually been implemented and tested.
+
+## Future Scope
+
+The current project runs through the command line. In a future development stage, I plan to turn it into a complete software application with a user-friendly interface. The planned application may allow users to upload documents, manage multiple files, ask questions through a chat-style interface, and view the source passages used to generate answers.
+
+Possible future extensions include support for additional formats such as DOCX and TXT, OCR for scanned documents, improved retrieval and ranking, and a web or mobile interface. These are planned enhancements and are not features of the current version.
 
 ## Learning Outcomes
 
-Through this project, I am exploring and implementing:
+This project provides practical experience with:
 
 - Retrieval-Augmented Generation (RAG)
 - Natural Language Processing (NLP)
 - Text embeddings and semantic similarity
 - Vector database management
 - Document processing pipelines
-- Large Language Model integration
-- Backend application development
-
-## Future Scope
-
-The project can be extended with:
-
-- Support for multiple document formats.
-- Multiple PDF uploads and document collections.
-- Improved retrieval techniques.
-- Source references for generated answers.
-- Conversational question answering.
-- A mobile-friendly user interface.
-- Local and privacy-conscious LLM execution.
+- Local Large Language Model integration
+- Python application development
 
 ## Author
 
-**Harshit**
-
+**Harshit**  
 2026 CSE Graduate | KIIT
 
-Interests: Artificial Intelligence, Machine Learning, NLP, Generative AI, LLMs and Backend Development.
+Interests: Artificial Intelligence, Machine Learning, NLP, Generative AI, LLMs, RAG, and Backend Development.
 
 ## License
 
