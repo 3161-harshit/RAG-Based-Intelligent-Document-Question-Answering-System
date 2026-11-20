@@ -1,0 +1,364 @@
+# Project Name: RAG System Implementation
+
+## 1. Project Foundation
+
+**Retrieval-Augmented Generation (RAG) and Large Language Models (LLMs)**
+
+This project focuses on implementing a Retrieval-Augmented Generation (RAG) system that allows users to ask questions about information contained in their own documents.
+
+The system retrieves relevant information from a PDF document and provides it as context to a Large Language Model (LLM), which generates a response based on the retrieved content.
+
+The current implementation is developed using Python and runs locally on the user's computer.
+
+## 2. Project Objectives
+
+The main objectives of this project are:
+
+- To understand the working principles of Retrieval-Augmented Generation.
+- To extract and process text from PDF documents.
+- To divide large documents into smaller chunks.
+- To generate semantic embeddings using a Sentence Transformer model.
+- To store and retrieve document embeddings using ChromaDB.
+- To integrate a locally running LLM using Ollama.
+- To generate answers based on information retrieved from user-provided documents.
+
+## 3. Required Inputs
+
+The current system primarily requires two inputs:
+
+1. **Knowledge Source:** A PDF document containing information that the system can process.
+2. **User Query:** A question or prompt provided by the user to retrieve relevant information from the document.
+
+Other formats, such as TXT, DOCX, CSV, Python files, and images, can be supported by extending the document-processing pipeline.
+
+## 4. Definition of RAG
+
+**Retrieval-Augmented Generation (RAG)** is a technique that combines information retrieval with Large Language Models (LLMs).
+
+Instead of relying only on the knowledge learned during model training, RAG retrieves relevant information from an external knowledge source and provides it to the LLM as additional context.
+
+This approach helps the model generate responses that are more relevant to the user's documents and specific questions.
+
+## 5. How RAG Works
+
+A RAG system follows two main stages:
+
+1. **Retrieval:** The system searches the knowledge base and identifies the most relevant document sections or text chunks based on the user's question.
+2. **Generation:** The retrieved information is provided to the LLM along with the user's question. The model then generates a response using the supplied context.
+
+This process allows users to interact with their own documents through natural-language questions.
+
+## 6. Core Components of a RAG System
+
+- **Document Loader:** Reads and extracts information from source documents.
+- **Text Splitter:** Divides extracted text into smaller, manageable chunks.
+- **Embedding Model:** Converts text chunks and user queries into numerical vector representations.
+- **Vector Database:** Stores embeddings and associated text so that relevant information can be retrieved efficiently.
+- **Retriever:** Searches the vector database for information relevant to the user's query.
+- **Generator (LLM):** Uses the retrieved context to generate the final response.
+
+## 7. Types of Databases
+
+### 7.1 Vector Database
+
+A vector database stores numerical representations of information called embeddings.
+
+It supports similarity-based searching, allowing the system to find information based on meaning rather than relying only on exact keyword matches.
+
+**Database used in this project:** ChromaDB.
+
+### 7.2 Structured Databases
+
+Structured databases store information in an organized format, such as rows, columns, and tables.
+
+They are useful when working with structured records, such as customer details, transactions, and other tabular information.
+
+Vector databases and structured databases serve different purposes and can be used together when required.
+
+## 8. RAG Architecture
+
+The system is divided into two main pipelines.
+
+### 8.1 Document Ingestion Pipeline
+
+The ingestion pipeline prepares documents for searching.
+
+**Process:**
+
+1. The user provides a PDF file.
+2. The system extracts text from the PDF.
+3. The extracted text is divided into smaller chunks.
+4. The embedding model converts each chunk into a vector.
+5. The vectors and associated text are stored in ChromaDB.
+
+### 8.2 Retrieval and Generation Pipeline
+
+This pipeline processes user questions and generates answers.
+
+**Process:**
+
+1. The user enters a question.
+2. The embedding model converts the question into a vector.
+3. ChromaDB searches for semantically similar document chunks.
+4. The most relevant chunks are retrieved.
+5. The retrieved content and user question are passed to the LLM.
+6. The LLM generates a response using the retrieved information as context.
+
+## 9. Key Concepts in Data Ingestion
+
+### 9.1 Text Extraction
+
+Text extraction is the process of reading and collecting textual information from documents.
+
+For PDF files, a document-processing library extracts the available text so that it can be processed by the RAG pipeline.
+
+Scanned PDFs may require an additional OCR (Optical Character Recognition) step because their pages can contain images instead of selectable text.
+
+### 9.2 Chunking
+
+Chunking is the process of dividing large documents into smaller sections called chunks.
+
+Dividing documents into smaller sections makes information easier to process, store, and retrieve.
+
+### 9.3 Chunk Size
+
+Chunk size determines how much text is included in each chunk.
+
+The appropriate size depends on the document, embedding model, and retrieval requirements.
+
+The initial configuration used in this project is:
+
+- Chunk size: 600 characters.
+- Chunk overlap: 100 characters.
+- Step size: 500 characters.
+
+These are character-based settings, not token-based settings.
+
+### 9.4 Chunk Overlap
+
+Chunk overlap means repeating a small portion of text between consecutive chunks.
+
+It helps preserve context when important information appears near a chunk boundary.
+
+For example, with a chunk size of 600 characters and an overlap of 100 characters, the next chunk starts 500 characters after the previous chunk's starting position.
+
+### 9.5 Embeddings
+
+Embeddings are numerical representations of text that capture semantic meaning.
+
+They allow the system to compare the meaning of a user's question with the meaning of stored document chunks.
+
+In this project, the `all-MiniLM-L6-v2` Sentence Transformer model is used to generate embeddings with 384 dimensions.
+
+### 9.6 Vector Similarity Search
+
+After embeddings are stored in ChromaDB, the system compares the user's query embedding with the stored document embeddings.
+
+The system retrieves the chunks that are most similar to the query.
+
+These retrieved chunks are then used as context for the LLM.
+
+## 10. Technologies Used
+
+| Technology | Purpose |
+|---|---|
+| Python | Main programming language |
+| PyPDF | Extracting text from PDF documents |
+| Sentence Transformers | Generating text embeddings |
+| all-MiniLM-L6-v2 | Embedding model |
+| ChromaDB | Storing and retrieving vector embeddings |
+| Ollama | Running the LLM locally |
+| Llama 3.2 | Generating responses from retrieved context |
+
+## 11. How to Install and Run the Project
+
+The current version is designed to run locally using Python. Users can download or clone the GitHub repository and execute the project on their own computers.
+
+### 11.1 Prerequisites
+
+Before running the project, make sure the following software is installed:
+
+- Python.
+- Git.
+- Ollama.
+- A compatible local LLM, such as Llama 3.2.
+
+### 11.2 Download the Project
+
+Clone the GitHub repository:
+
+```bash
+git clone YOUR_GITHUB_REPOSITORY_URL
+```
+
+Navigate to the project directory:
+
+```bash
+cd YOUR_PROJECT_FOLDER
+```
+
+Alternatively, users can download the repository as a ZIP file and extract it.
+
+### 11.3 Create a Virtual Environment
+
+Create an isolated Python environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+### 11.4 Install Python Dependencies
+
+Install the required libraries:
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs the Python packages required by the project.
+
+### 11.5 Set Up Ollama and the Language Model
+
+Install Ollama separately on the computer.
+
+Download the Llama 3.2 model:
+
+```bash
+ollama pull llama3.2
+```
+
+Verify that the model is available:
+
+```bash
+ollama list
+```
+
+Ollama must be running locally when the Python application sends requests to it.
+
+### 11.6 Provide a PDF Document
+
+Run the Python program and provide the path of the PDF document when prompted.
+
+For example:
+
+```text
+Enter the path of your PDF file:
+C:\Users\Username\Documents\research.pdf
+```
+
+The system uses this path to locate and read the selected document.
+
+The user should provide a valid path to an accessible PDF file.
+
+### 11.7 Execute the Project
+
+Run the main Python file:
+
+```bash
+python main.py
+```
+
+Replace `main.py` with the actual entry-point filename in the repository if it is different.
+
+After execution, the system begins processing the supplied PDF document.
+
+## 12. How to Use the Project
+
+Once the required dependencies and language model are installed, users can follow these steps:
+
+**Step 1: Provide a PDF**
+
+Enter the location of the PDF file when the program requests it.
+
+**Step 2: Extract Document Text**
+
+The system reads the PDF and extracts its available textual content.
+
+**Step 3: Generate Text Chunks**
+
+The extracted text is divided into smaller chunks according to the configured chunk size and overlap.
+
+The system can display the generated chunks in the terminal so that users can understand how the document is divided.
+
+**Step 4: Generate Embeddings**
+
+The Sentence Transformer model converts the generated text chunks into numerical vectors.
+
+**Step 5: Store Data in ChromaDB**
+
+The embeddings and their associated text are stored in the local ChromaDB collection for similarity-based retrieval.
+
+**Step 6: Ask Questions**
+
+After the document has been processed, the user can enter questions related to its content.
+
+**Step 7: Retrieve Relevant Information**
+
+The system converts the question into an embedding and searches ChromaDB for relevant document chunks.
+
+**Step 8: Generate the Answer**
+
+The retrieved information is passed to Llama 3.2 through Ollama. The language model uses the question and retrieved context to generate a response.
+
+The user can then continue asking questions about the processed document.
+
+## 13. Project Workflow
+
+The complete workflow is:
+
+**PDF Input → Text Extraction → Text Chunking → Embedding Generation → ChromaDB Storage → User Query → Query Embedding → Similarity Search → Context Retrieval → LLM → Final Answer**
+
+## 14. Expected Output and Demonstration
+
+The project can demonstrate the following stages through terminal output:
+
+- PDF file selection.
+- Extracted document text.
+- Total number of generated chunks.
+- Individual chunk content.
+- Embedding dimensions.
+- Number of records stored in ChromaDB.
+- Retrieved document chunks for a user query.
+- Final answer generated by the LLM.
+
+These outputs help users understand the internal processing stages of the RAG pipeline.
+
+## 15. Future Development: Software Application
+
+The current implementation is a Python-based local RAG system that can be executed through a terminal.
+
+In the future, this project will be further developed into a complete software application with a user-friendly interface.
+
+The aim is to make the system easier to use without requiring users to interact directly with Python scripts or manually enter document paths.
+
+The planned application may include the following features:
+
+- **Document Upload:** Allow users to upload PDF files directly through an application interface.
+- **Multiple File Support:** Enable users to work with multiple documents.
+- **Document Preview:** Display document information and extracted content.
+- **Chunk Visualization:** Show how uploaded documents are divided into smaller text chunks.
+- **AI-Powered Question Answering:** Allow users to ask questions through an interactive interface.
+- **Source References:** Display the document sections used to generate an answer.
+- **Additional File Formats:** Extend support to DOCX, TXT, CSV, scanned PDFs, and images where appropriate.
+- **Improved Retrieval:** Introduce better retrieval techniques to improve the relevance of retrieved information.
+- **User-Friendly Experience:** Provide a more accessible way to upload documents, manage knowledge sources, and interact with the AI system.
+
+The future application may be developed as a web-based or desktop-based software solution, depending on the requirements and development approach.
+
+These features represent planned improvements and are not part of the current implementation unless explicitly completed.
+
+## 16. Conclusion
+
+This project demonstrates the implementation of a basic Retrieval-Augmented Generation system using Python, Sentence Transformers, ChromaDB, Ollama, and Llama 3.2.
+
+By combining document retrieval with an LLM, the system allows users to ask natural-language questions about their own PDF documents.
+
+The project provides practical experience with document processing, text chunking, embeddings, vector databases, semantic search, and local LLM integration.
+
+The next stage of development is to transform the current Python-based implementation into a more complete software application with an intuitive interface and additional document-processing capabilities.
