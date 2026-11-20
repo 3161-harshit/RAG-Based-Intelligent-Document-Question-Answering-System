@@ -163,6 +163,12 @@ Replace the example PDF path with the actual path to a PDF on your computer.
 
 The answer depends on the text extracted from the selected PDF and the passages retrieved for the question.
 
+## Performance Evaluation
+
+Five test runs were conducted using an 801-page PDF. The evaluation includes execution-time graphs, stage-by-stage timings, retrieval observations, answer-quality notes, limitations, and recommendations.
+
+See the [RAG Performance Evaluation Report](RAG_PERFORMANCE_EVALUATION.md) for the detailed results.
+
 ## Initial Implementation Results
 
 The initial ingestion run reported the following results:
