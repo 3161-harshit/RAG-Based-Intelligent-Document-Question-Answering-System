@@ -167,7 +167,7 @@ These percentages describe the listed stage averages relative to the average tot
 
 - Tests 1–4 average ChromaDB indexing time: **3.2035 seconds**.
 - Test 5 ChromaDB indexing time: **1,331.8014 seconds**.
-- Test 5 indexing was approximately **415.8 times** the Tests 1–4 average? **Correction: approximately 415.8?** Recalculation: 1,331.8014 / 3.2035 = **415.8 times**.
+- Test 5 indexing was approximately **415.7 times** the Tests 1–4 average (1,331.8014 / 3.2035).
 
 This is an observed anomaly, not proof that the laptop CPU or RAM caused it. Possible contributors include resource contention, memory pressure, disk I/O, database persistence/indexing behavior, or other runtime conditions. CPU, RAM, and disk monitoring during a repeat run is needed to identify the cause.
 
