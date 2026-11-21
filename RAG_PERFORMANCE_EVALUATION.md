@@ -132,3 +132,52 @@ The most important anomaly is Test 5's ChromaDB indexing time. The next engineer
 ---
 
 *Report based on five terminal test runs. Update this file when additional benchmark runs or verified evaluation metrics are available.*
+
+
+## 8. Quantitative benchmark summary
+
+### Overall execution-time statistics
+
+The following statistics are calculated from the five recorded total execution times.
+
+| Metric | Result |
+|---|---:|
+| Number of test runs | 5 |
+| Mean execution time, all five runs | 473.88 seconds (7 min 54 sec) |
+| Mean execution time, Tests 1–4 | 193.96 seconds (3 min 14 sec) |
+| Median execution time | 183.95 seconds (3 min 04 sec) |
+| Fastest execution | 174.15 seconds (2 min 54 sec), Test 2 |
+| Slowest execution | 1,593.54 seconds (26 min 34 sec), Test 5 |
+
+The all-five mean is strongly affected by Test 5. The Tests 1–4 mean is a more representative baseline for these observations, but it is not a guaranteed future runtime.
+
+### Average stage timings for Tests 1–4
+
+| Stage | Average time | Share of 193.96-second baseline |
+|---|---:|---:|
+| Text extraction | 64.46 s | 33.23% |
+| Embedding generation | 107.06 s | 55.20% |
+| ChromaDB indexing | 3.20 s | 1.65% |
+| Similarity search | 0.0076 s | less than 0.01% |
+| Ollama response | 17.36 s | 8.95% |
+
+These percentages describe the listed stage averages relative to the average total runtime; small differences can occur because the table omits minor stages and rounding is applied. Embedding generation and text extraction together account for approximately 88.43% of the typical-run baseline.
+
+### Test 5 indexing anomaly
+
+- Tests 1–4 average ChromaDB indexing time: **3.2035 seconds**.
+- Test 5 ChromaDB indexing time: **1,331.8014 seconds**.
+- Test 5 indexing was approximately **415.8 times** the Tests 1–4 average? **Correction: approximately 415.8?** Recalculation: 1,331.8014 / 3.2035 = **415.8 times**.
+
+This is an observed anomaly, not proof that the laptop CPU or RAM caused it. Possible contributors include resource contention, memory pressure, disk I/O, database persistence/indexing behavior, or other runtime conditions. CPU, RAM, and disk monitoring during a repeat run is needed to identify the cause.
+
+### How to interpret efficiency
+
+There is no single validated “overall efficiency percentage” in these five tests. Runtime alone does not measure answer correctness or retrieval quality. The available performance indicators are:
+- **Latency:** approximately 193.96 seconds average for Tests 1–4.
+- **Fastest observed latency:** 174.15 seconds.
+- **Retrieval latency:** approximately 0.0076 seconds for similarity search on average in Tests 1–4.
+- **Processing bottlenecks:** embedding generation and text extraction.
+- **Quality:** qualitative review only; no labelled dataset was used to calculate accuracy, Precision@K, Recall@K, or F1.
+
+A fair hardware comparison requires rerunning the same PDF, code, model, and settings on another machine under comparable conditions, preferably with multiple runs and resource monitoring.
